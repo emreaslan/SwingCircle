@@ -27,16 +27,17 @@ public class Application extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				angdeg += 1.0;
 				panel.repaint();
-				/*
-				if (angdeg >= 360){
+
+				if (angdeg >= 360) {
 					timer.stop();
-				}else{
+				} else {
 					timer.restart();
-				}*/
-				timer.restart();
+				}
+
+//				timer.restart();
 			}
 		});
-		panel = new JPanel() {			
+		panel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				Graphics2D g2 = (Graphics2D) g;
@@ -48,20 +49,33 @@ public class Application extends JFrame {
 				g2.setRenderingHints(rh);
 				g2.setRenderingHints(rh2);
 
-				//double x = this.getWidth(), y = this.getHeight(), w = this.getWidth(), h = this.getHeight();
-				double x = 300, y = 300, w = 300, h = 300;
+				// double x = this.getWidth(), y = this.getHeight(), w =
+				// this.getWidth(), h = this.getHeight();
+				// double x = 300, y = 300, w = 300, h = 300;
+				double x, y, w, h;
+				x = w = this.getWidth();
+				y = h = this.getHeight();
+				if (x>y)
+					x = y;
+				else
+					y = x;	
+				System.out.println(x + " " + y);
 
 				g2.setColor(Color.BLACK);
-				Shape big = new Ellipse2D.Double(x / 20 + 10, y / 20 + 10, x / 1.2, y / 1.2);
+				double a = 10;
+				Shape big = new Ellipse2D.Double(0, 0, x, y);
 				g2.fill(big);
 
 				g2.setColor(Color.RED);
-				int X = (int) x, Y = (int) y;
-				int xP = (int)(x/22.0), yP = (int)(y/22.0);
-				Polygon indicatorTriangle = new Polygon(
-						new int[] { (int) (xP + X / 2.3), (int) (xP+ X / 2.4), (int) (xP + X / 2.5) },
-						new int[] {  (int) yP + Y / 2, (int) yP + Y / 20, (int) yP + Y / 2 }, 3);
-				//g2.fillPolygon(indicatorTriangle);
+
+				int xT = (int) (x / 2);
+				int xTl = xT - (int) a;
+				int xTr = xT + (int) a;
+				int yT = (int) 0;
+				int yTl, yTr;
+				yTl = yTr = (int) (3 * y / 4);
+				Polygon indicatorTriangle = new Polygon(new int[] { xTl, xT, xTr }, new int[] { yTl, yT, yTr }, 3);
+				// g2.fillPolygon(indicatorTriangle);
 				AffineTransform oldTransform = g2.getTransform();
 				AffineTransform at = new AffineTransform();
 				at.rotate(Math.toRadians(angdeg), w / 2, h / 2);
@@ -70,29 +84,27 @@ public class Application extends JFrame {
 				g2.setTransform(at);
 				g2.fillPolygon(indicatorTriangle);
 
-//				g2.setTransform(oldTransform);
-//				g2.setColor(Color.GRAY);
-//				Shape small = new Ellipse2D.Double( x/3, y/3, w/4, h/4);
-//				g2.fill(small);
+				g2.setTransform(oldTransform);
+				g2.setColor(Color.GRAY);
+				Shape small = new Ellipse2D.Double(x / 2 - x / 16, y / 2 - y / 16, x / 8, h / 8);
+				g2.fill(small);
 			}
 		};
 
-		setSize(new Dimension(400, 400));
+		setSize(new Dimension(356, 378));
 		setTitle("Test");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		add(panel);
 		timer.start();
 	}
-	
-	
 
 	public static void main(String args[]) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				Application app = new Application();
-				app.setVisible(true);				
+				app.setVisible(true);
 			}
 		});
 	}
