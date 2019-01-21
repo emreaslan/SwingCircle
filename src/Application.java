@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,7 +18,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class Application extends JFrame {
-	public double angdeg;
+	public double angdeg, wanted = 30;
 	public JPanel panel;
 	public Timer timer;
 
@@ -25,16 +27,23 @@ public class Application extends JFrame {
 		timer = new Timer(20, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+//				if (angdeg < wanted){
+//					angdeg += 1.0;
+//				} else {
+//					angdeg -= 1.0;
+//				}
+//				
+//				panel.repaint();
+//				if ( Math.abs(angdeg - wanted) <= 1 ){
+//					timer.stop();
+//				} else{
+//					timer.restart();
+//				}
+//				
+
 				angdeg += 1.0;
 				panel.repaint();
-
-				if (angdeg >= 360) {
-					timer.stop();
-				} else {
-					timer.restart();
-				}
-
-//				timer.restart();
+				timer.restart();
 			}
 		});
 		panel = new JPanel() {
@@ -61,7 +70,9 @@ public class Application extends JFrame {
 					y = x;	
 				System.out.println(x + " " + y);
 
-				g2.setColor(Color.BLACK);
+				//g2.setColor(Color.BLACK);
+				GradientPaint gp = new GradientPaint(new Point2D.Double(0,0), Color.GRAY, new Point2D.Double(x,y), Color.BLACK);
+				g2.setPaint(gp);
 				double a = 10;
 				Shape big = new Ellipse2D.Double(0, 0, x, y);
 				g2.fill(big);
@@ -86,8 +97,8 @@ public class Application extends JFrame {
 
 				g2.setTransform(oldTransform);
 				g2.setColor(Color.GRAY);
-				Shape small = new Ellipse2D.Double(x / 2 - x / 16, y / 2 - y / 16, x / 8, h / 8);
-				g2.fill(small);
+				Shape small = new Ellipse2D.Double(x / 2 - x / 20, y / 2 - y / 20, x / 10, h / 10);
+				g2.fill(small);				
 			}
 		};
 
